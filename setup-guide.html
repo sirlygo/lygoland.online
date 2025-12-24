@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup Guide - Lygoland Server</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0a0f1e;
+            --bg-secondary: #12192b;
+            --text: #e8eaf0;
+            --text-muted: #8b92a7;
+            --accent: #00d9ff;
+            --accent-2: #7c3aed;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --border: rgba(255, 255, 255, 0.08);
+            --code-bg: #1a1f35;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Background Animation */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(0, 217, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.08) 0%, transparent 50%);
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 15, 30, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: var(--text);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--accent);
+            background: rgba(0, 217, 255, 0.05);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        /* Main Content */
+        .main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 8rem 2rem 4rem;
+        }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 50px;
+            color: var(--success);
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        /* Steps */
+        .step-container {
+            margin-bottom: 4rem;
+        }
+
+        .step {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s;
+        }
+
+        .step:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(0, 217, 255, 0.15);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .step-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+        .step-content {
+            margin-left: 76px;
+        }
+
+        .step-content p {
+            margin-bottom: 1.25rem;
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        .step-content ul {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+
+        .step-content li {
+            padding: 1rem;
+            background: var(--code-bg);
+            border-left: 3px solid var(--accent);
+            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .step-content li strong {
+            color: var(--accent);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Platform Cards */
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .platform-card {
+            background: var(--code-bg);
+            border: 2px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .platform-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        .platform-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .platform-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .platform-desc {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Code Block */
+        .code-block {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .code-title {
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .copy-btn {
+            padding: 0.4rem 0.8rem;
+            background: rgba(0, 217, 255, 0.1);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 0.4rem;
+            color: var(--accent);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .copy-btn:hover {
+            background: rgba(0, 217, 255, 0.2);
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            color: var(--text);
+            display: block;
+            user-select: all;
+        }
+
+        /* Alert Box */
+        .alert {
+            padding: 1.25rem 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .alert-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .alert-content h4 {
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .alert-content p {
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        .alert-info {
+            background: rgba(58, 134, 255, 0.1);
+            border-color: #3a86ff;
+            color: #3a86ff;
+        }
+
+        .alert-info .alert-content p {
+            color: var(--text-muted);
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .alert-success .alert-content p {
+            color: var(--text-muted);
+        }
+
+        .alert-warning {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: var(--warning);
+            color: var(--warning);
+        }
+
+        .alert-warning .alert-content p {
+            color: var(--text-muted);
+        }
+
+        /* Screenshot Placeholder */
+        .screenshot {
+            background: var(--code-bg);
+            border: 2px solid var(--border);
+            border-radius: 1rem;
+            padding: 3rem;
+            text-align: center;
+            margin: 2rem 0;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .screenshot-icon {
+            font-size: 4rem;
+            opacity: 0.5;
+        }
+
+        .screenshot-label {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* FAQ */
+        .faq {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        .faq h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .faq-item {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .faq-question {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--accent);
+        }
+
+        .faq-answer {
+            color: var(--text-muted);
+        }
+
+        /* Footer CTA */
+        .footer-cta {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 3rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        .footer-cta h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-cta p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main {
+                padding: 6rem 1.5rem 2rem;
+            }
+
+            .step-content {
+                margin-left: 0;
+                margin-top: 1rem;
+            }
+
+            .step-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .platform-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Selection */
+        ::selection {
+            background: var(--accent);
+            color: var(--bg);
+        }
+    </style>
+</head>
+<body>
+    <!-- Background -->
+    <div class="bg-animation"></div>
+
+    <!-- Content -->
+    <div class="content">
+        <!-- Navigation -->
+        <nav>
+            <div class="nav-container">
+                <div class="logo">
+                    <span>⛏</span>
+                    <span>Lygoland</span>
+                </div>
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="#requirements" class="nav-link">Requirements</a>
+                    <a href="#faq" class="nav-link">FAQ</a>
+                    <a href="https://discord.gg/lygoland" class="btn btn-sm" target="_blank" rel="noopener noreferrer">
+                        💬 Discord
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Hero -->
+            <div class="hero">
+                <div class="hero-badge">
+                    <span>📖</span>
+                    <span>Complete Setup Guide</span>
+                </div>
+                <h1>
+                    Get Started with<br>
+                    <span class="gradient-text">Lygoland</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Follow these simple steps to install Minecraft and join our server. Whether you're a beginner or experienced player, we've got you covered!
+                </p>
+            </div>
+
+            <!-- Quick Info -->
+            <div class="alert alert-info">
+                <div class="alert-icon">ℹ️</div>
+                <div class="alert-content">
+                    <h4>Server Information</h4>
+                    <p><strong>Address:</strong> <code style="color: var(--accent); font-size: 1rem;">lygoland.online</code></p>
+                    <p><strong>Version:</strong> Java Edition 1.20+ (recommended)</p>
+                    <p><strong>Type:</strong> Survival, Creative, Minigames</p>
+                </div>
+            </div>
+
+            <!-- Step 1: Choose Platform -->
+            <div class="step-container">
+                <div class="step">
+                    <div class="step-header">
+                        <div class="step-number">1</div>
+                        <h2 class="step-title">Choose Your Platform</h2>
+                    </div>
+                    <div class="step-content">
+                        <p>Lygoland runs on Minecraft Java Edition. First, select your platform to get the correct version:</p>
+                        
+                        <div class="platform-grid">
+                            <div class="platform-card" onclick="showPlatform('windows')">
+                                <div class="platform-icon">🪟</div>
+                                <h3 class="platform-name">Windows</h3>
+                                <p class="platform-desc">Windows 10/11</p>
+                                <button class="btn btn-sm btn-outline">Select</button>
+                            </div>
+                            
+                            <div class="platform-card" onclick="showPlatform('mac')">
+                                <div class="platform-icon">🍎</div>
+                                <h3 class="platform-name">macOS</h3>
+                                <p class="platform-desc">Mac computers</p>
+                                <button class="btn btn-sm btn-outline">Select</button>
+                            </div>
+                            
+                            <div class="platform-card" onclick="showPlatform('linux')">
+                                <div class="platform-icon">🐧</div>
+                                <h3 class="platform-name">Linux</h3>
+                                <p class="platform-desc">Ubuntu, Debian, etc.</p>
+                                <button class="btn btn-sm btn-outline">Select</button>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-warning">
+                            <div class="alert-icon">⚠️</div>
+                            <div class="alert-content">
+                                <h4>Important: Java Edition Required</h4>
+                                <p>You need Minecraft <strong>Java Edition</strong> to join Lygoland. Bedrock Edition (Windows 10 Edition, Mobile, Console) is NOT compatible with our server.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Purchase Minecraft -->
+                <div class="step">
+                    <div class="step-header">
+                        <div class="step-number">2</div>
+                        <h2 class="step-title">Get Minecraft Java Edition</h2>
+                    </div>
+                    <div class="step-content">
+                        <p>If you don't already own Minecraft Java Edition, here's how to purchase it:</p>
+                        
+                        <ul>
+                            <li>
+                                <strong>Official Website</strong>
+                                Visit <a href="https://www.minecraft.net" target="_blank" rel="noopener noreferrer" style="color: var(--accent);">minecraft.net</a> and create a Microsoft account (or log in)
+                            </li>
+                            <li>
+                                <strong>Purchase Java Edition</strong>
+                                Click "Get Minecraft" → Select "Minecraft: Java & Bedrock Edition" ($29.99 USD - includes both versions)
+                            </li>
+                            <li>
+                                <strong>Complete Payment</strong>
+                                Use your preferred payment method (credit card, PayPal, prepaid card, etc.)
+                            </li>
+                        </ul>
+
+                        <div class="alert alert-success">
+                            <div class="alert-icon">✅</div>
+                            <div class="alert-content">
+                                <h4>Already Have an Account?</h4>
+                                <p>If you purchased Minecraft before 2020, you may need to migrate your Mojang account to a Microsoft account. Visit <a href="https://www.minecraft.net/en-us/mojang-account-move" target="_blank" rel="noopener noreferrer" style="color: var(--success);">this link</a> to migrate.</p>
+                            </div>
+                        </div>
+
+                        <div class="screenshot">
+                            <div class="screenshot-icon">🖼️</div>
+                            <div class="screenshot-label">Screenshot: Minecraft.net Purchase Page</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Download Launcher -->
+                <div class="step">
+                    <div class="step-header">
+                        <div class="step-number">3</div>
+                        <h2 class="step-title">Download the Minecraft Launcher</h2>
+                    </div>
+                    <div class="step-content">
+                        <p>The Minecraft Launcher is the application that manages your game installations and updates.</p>
+                        
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">🔗 Download Links</span>
+                            </div>
+                            <ul style="list-style: none; margin: 0; padding: 0;">
+                                <li style="background: none; border: none; padding: 0.5rem 0; margin: 0;">
+                                    <strong style="color: var(--text);">Windows:</strong> 
+                                    <a href="https://www.minecraft.net/en-us/download" target="_blank" rel="noopener noreferrer" style="color: var(--accent);">minecraft.net/download</a>
+                                </li>
+                                <li style="background: none; border: none; padding: 0.5rem 0; margin: 0;">
+                                    <strong style="color: var(--text);">macOS:</strong> 
+                                    <a href="https://www.minecraft.net/en-us/download" target="_blank" rel="noopener noreferrer" style="color: var(--accent);">minecraft.net/download</a>
+                                </li>
+                                <li style="background: none; border: none; padding: 0.5rem 0; margin: 0;">
+                                    <strong style="color: var(--text);">Linux:</strong> 
+                                    <a href="https://www.minecraft.net/en-us/download" target="_blank" rel="noopener noreferrer" style="color: var(--accent);">minecraft.net/download</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <h4 style="margin: 2rem 0 1rem; font-size: 1.3rem;">Installation Steps:</h4>
+                        <ul>
+                            <li>
+                                <strong>Windows</strong>
+                                Run the <code>MinecraftInstaller.msi</code> file and follow the setup wizard. The launcher will be installed to your Start Menu.
+                            </li>
+                            <li>
+                                <strong>macOS</strong>
+                                Open the <code>.dmg</code> file and drag Minecraft to your Applications folder. Launch from Applications.
+                            </li>
+                            <li>
+                                <strong>Linux</strong>
+                                Extract the <code>.tar.gz</code> file and run <code>minecraft-launcher</code>. Or install via your package manager.
+                            </li>
+                        </ul>
+
+                        <div class="screenshot">
+                            <div class="screenshot-icon">🖼️</div>
+                            <div class="screenshot-label">Screenshot: Minecraft Launcher Installation</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Install Java (if needed) -->
+                <div class="step">
+                    <div class="step-header">
+                        <div class="step-number">4</div>
+                        <h2 class="step-title">Install Java (Usually Automatic)</h2>
+                    </div>
+                    <div class="step-content">
+                        <p>Minecraft Java Edition requires Java to run. The launcher typically installs this automatically, but if you encounter issues:</p>
+                        
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">Manual Java Installation</span>
+                            </div>
+                            <ul style="list-style: none; margin: 0; padding: 0;">
+                                <li style="background: none; border: none; padding: 0.5rem 0; margin: 0;">
+                                    Download Java 17+ from <a href="https://adoptium.net" target="_blank" rel="noopener noreferrer" style="color: var(--accent);">adoptium.net</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <div class="alert-icon">💡</div>
+                            <div class="alert-content">
+                                <h4>Most Users Can Skip This</h4>
+                                <p>The Minecraft Launcher automatically includes Java. Only install Java manually if the game won't start.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5: Launch Minecraft -->
+                <div class="step">
+                    <div class="step-header">
+                        <div class="step-number">5</div>
+                        <h2 class="step-title">Launch Minecraft & Log In</h2>
+                    </div>
+                    <div class="step-content">
+                        <p>Open the Minecraft Launcher and sign in with your Microsoft account.</p>
+                        
+                        <ul>
+                            <li>
+                                <strong>Open Launcher</strong>
+                                Find "Minecraft Launcher" in your Start Menu (Windows), Applications (Mac), or program menu (Linux)
+                            </li>
+                            <li>
+                                <strong>Sign In</strong>
+                                Click "Microsoft Login" and enter your account credentials
+                            </li>
+                            <li>
+                                <strong>Select Version</strong>
+                                Make sure "Java Edition" is selected (not Bedrock). Choose version 1.20+ for best compatibility
+                            </li>
+                            <li>
+                                <strong>Launch Game</strong>
+                                Click the big green "Play" button and wait for the game to load
+                            </li>
+                        </ul>
+
+                        <div class="screenshot">
+                            <div class="screenshot-icon">🖼️</div>
+                            <div class="screenshot-label">Screenshot: Minecraft Launcher Main Screen</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 6: Connect to Server -->
+                <div class="step">
+                    <div class="step-header">
+                        <div class="step-number">6</div>
+                        <h2 class="step-title">🎮 Join Lygoland Server</h2>
+                    </div>
+                    <div class="step-content">
+                        <p>You're almost there! Now let's connect you to our server.</p>
+                        
+                        <h4 style="margin: 1.5rem 0 1rem; font-size: 1.3rem;">Method 1: Direct Connect (Quick)</h4>
+                        <ul>
+                            <li>
+                                <strong>Step 1</strong>
+                                From the Minecraft main menu, click <strong>"Multiplayer"</strong>
+                            </li>
+                            <li>
+                                <strong>Step 2</strong>
+                                Click <strong>"Direct Connection"</strong> button
+                            </li>
+                            <li>
+                                <strong>Step 3</strong>
+                                Enter the server address: 
+                            </li>
+                        </ul>
+
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">Server Address</span>
+                                <button class="copy-btn" onclick="copyServerIP()">📋 Copy</button>
+                            </div>
+                            <code id="serverIP">lygoland.online</code>
+                        </div>
+
+                        <ul>
+                            <li>
+                                <strong>Step 4</strong>
+                                Click <strong>"Join Server"</strong> and you're in! 🎉
+                            </li>
+                        </ul>
+
+                        <h4 style="margin: 2rem 0 1rem; font-size: 1.3rem;">Method 2: Add to Server List (Recommended)</h4>
+                        <ul>
+                            <li>
+                                <strong>Step 1</strong>
+                                From Multiplayer menu, click <strong>"Add Server"</strong>
+                            </li>
+                            <li>
+                                <strong>Step 2</strong>
+                                Enter a name: <code style="color: var(--text);">Lygoland</code>
+                            </li>
+                            <li>
+                                <strong>Step 3</strong>
+                                Server Address: <code style="color: var(--accent);">lygoland.online</code>
+                            </li>
+                            <li>
+                                <strong>Step 4</strong>
+                                Click <strong>"Done"</strong> - the server is now saved!
+                            </li>
+                            <li>
+                                <strong>Step 5</strong>
+                                Double-click "Lygoland" from your server list to join
+                            </li>
+                        </ul>
+
+                        <div class="screenshot">
+                            <div class="screenshot-icon">🖼️</div>
+                            <div class="screenshot-label">Screenshot: Adding Server to Multiplayer List</div>
+                        </div>
+
+                        <div class="alert alert-success">
+                            <div class="alert-icon">🎊</div>
+                            <div class="alert-content">
+                                <h4>Welcome to Lygoland!</h4>
+                                <p>Once connected, say hi in chat! Our community is friendly and helpful. Check <code>/spawn</code> for the welcome area and <code>/help</code> for commands.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bonus: OptiFine -->
+                <div class="step">
+                    <div class="step-header">
+                        <div class="step-number">💡</div>
+                        <h2 class="step-title">Bonus: Install OptiFine (Optional)</h2>
+                    </div>
+                    <div class="step-content">
+                        <p>OptiFine improves performance and adds visual enhancements like shaders. Highly recommended for better gameplay!</p>
+                        
+                        <ul>
+                            <li>
+                                <strong>Download OptiFine</strong>
+                                Visit <a href="https://optifine.net/downloads" target="_blank" rel="noopener noreferrer" style="color: var(--accent);">optifine.net/downloads</a> and download for your Minecraft version (e.g., 1.20.1)
+                            </li>
+                            <li>
+                                <strong>Install</strong>
+                                Run the <code>.jar</code> file and click "Install" (Java must be installed)
+                            </li>
+                            <li>
+                                <strong>Launch</strong>
+                                In the Minecraft Launcher, select the "OptiFine" profile from the dropdown, then click Play
+                            </li>
+                        </ul>
+
+                        <div class="alert alert-info">
+                            <div class="alert-icon">ℹ️</div>
+                            <div class="alert-content">
+                                <h4>Performance Boost</h4>
+                                <p>OptiFine can double your FPS on lower-end computers and enables HD textures, zoom, and custom shaders.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Requirements -->
+            <div id="requirements" class="step" style="margin-top: 4rem;">
+                <div class="step-header">
+                    <div class="step-number">⚙️</div>
+                    <h2 class="step-title">System Requirements</h2>
+                </div>
+                <div class="step-content">
+                    <h4 style="margin-bottom: 1rem; font-size: 1.3rem;">Minimum Requirements:</h4>
+                    <ul>
+                        <li><strong>OS:</strong> Windows 10/11, macOS 10.14+, or modern Linux</li>
+                        <li><strong>CPU:</strong> Intel Core i3 or AMD equivalent (2.5 GHz+)</li>
+                        <li><strong>RAM:</strong> 4 GB (8 GB recommended)</li>
+                        <li><strong>GPU:</strong> Intel HD Graphics 4000 or dedicated GPU</li>
+                        <li><strong>Storage:</strong> At least 2 GB free space</li>
+                        <li><strong>Internet:</strong> Broadband connection</li>
+                    </ul>
+
+                    <h4 style="margin: 2rem 0 1rem; font-size: 1.3rem;">Recommended for Best Experience:</h4>
+                    <ul>
+                        <li><strong>CPU:</strong> Intel Core i5/Ryzen 5 or better</li>
+                        <li><strong>RAM:</strong> 8 GB or more</li>
+                        <li><strong>GPU:</strong> NVIDIA GTX 1050 / AMD RX 560 or better</li>
+                        <li><strong>Storage:</strong> SSD for faster load times</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- FAQ -->
+            <div id="faq" class="faq">
+                <h2>Frequently Asked Questions</h2>
+                
+                <div class="faq-item">
+                    <h3 class="faq-question">Q: Can I play on Bedrock Edition (Xbox, Mobile, PS5)?</h3>
+                    <p class="faq-answer">No, Lygoland requires Minecraft Java Edition. Bedrock Edition uses different server software and is not compatible with Java Edition servers.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">Q: Is Minecraft free?</h3>
+                    <p class="faq-answer">No, Minecraft Java Edition costs $29.99 USD (one-time purchase). There are no subscription fees to play once purchased.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">Q: What version should I use?</h3>
+                    <p class="faq-answer">We recommend Minecraft 1.20.1 or newer. The server auto-updates to support the latest stable versions.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">Q: Do I need mods to play on Lygoland?</h3>
+                    <p class="faq-answer">No mods are required! Our server uses plugins (server-side only) that work with vanilla Minecraft. OptiFine is recommended for performance but optional.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">Q: I'm getting "Failed to connect" error. Help?</h3>
+                    <p class="faq-answer">Common fixes: 1) Check your internet connection, 2) Make sure you're using Java Edition (not Bedrock), 3) Verify the server address is exactly <code>lygoland.online</code>, 4) Restart Minecraft, 5) Check if the server is online at our <a href="index.html" style="color: var(--accent);">status page</a>.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">Q: Can I use cracked Minecraft?</h3>
+                    <p class="faq-answer">No, our server requires legitimate Minecraft accounts for security and anti-cheat purposes. Please purchase the game to support the developers and play on Lygoland.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">Q: My game is laggy. How can I improve performance?</h3>
+                    <p class="faq-answer">Try these: 1) Install OptiFine, 2) Lower video settings (render distance, particles, graphics: fast), 3) Allocate more RAM to Minecraft in the launcher (Edit Profile → More Options → JVM Arguments: change <code>-Xmx2G</code> to <code>-Xmx4G</code> if you have 8GB+ RAM), 4) Close other programs while playing.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">Q: Where can I get help if stuck?</h3>
+                    <p class="faq-answer">Join our <a href="https://discord.gg/lygoland" target="_blank" rel="noopener noreferrer" style="color: var(--accent);">Discord server</a>! Our friendly community and staff are always ready to help with setup issues, gameplay questions, or anything else.</p>
+                </div>
+            </div>
+
+            <!-- Footer CTA -->
+            <div class="footer-cta">
+                <h2>Ready to Start Your Adventure?</h2>
+                <p>Join thousands of players in the ultimate Minecraft experience</p>
+                <div class="cta-buttons">
+                    <button class="btn" onclick="copyServerIP()">
+                        <span>📋</span>
+                        <span>Copy Server IP</span>
+                    </button>
+                    <a href="index.html" class="btn btn-outline">
+                        <span>🏠</span>
+                        <span>Back to Home</span>
+                    </a>
+                    <a href="https://discord.gg/lygoland" class="btn btn-success" target="_blank" rel="noopener noreferrer">
+                        <span>💬</span>
+                        <span>Join Discord</span>
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Copy Server IP
+        function copyServerIP() {
+            const ip = document.getElementById('serverIP').textContent.trim();
+            
+            navigator.clipboard.writeText(ip).then(() => {
+                const btn = event?.currentTarget;
+                if (btn) {
+                    const original = btn.innerHTML;
+                    btn.innerHTML = '✅ Copied!';
+                    setTimeout(() => btn.innerHTML = original, 2000);
+                }
+            }).catch(() => {
+                window.prompt('Copy this server address:', ip);
+            });
+        }
+
+        // Platform selection (visual feedback)
+        function showPlatform(platform) {
+            const platforms = {
+                windows: 'Great choice! Windows is fully supported. Download the .msi installer from minecraft.net.',
+                mac: 'Perfect! macOS works great with Minecraft. Download the .dmg file from minecraft.net.',
+                linux: 'Excellent! Linux is supported. Download the .tar.gz or use your package manager.'
+            };
+
+            const cards = document.querySelectorAll('.platform-card');
+            cards.forEach(card => {
+                card.style.borderColor = 'var(--border)';
+            });
+
+            event.currentTarget.style.borderColor = 'var(--accent)';
+            
+            // Show temporary message (optional enhancement)
+            console.log(platforms[platform]);
+        }
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add copy buttons to all code blocks
+        document.querySelectorAll('.code-block').forEach(block => {
+            const copyBtn = block.querySelector('.copy-btn');
+            if (copyBtn) {
+                copyBtn.addEventListener('click', () => {
+                    const code = block.querySelector('code');
+                    if (code) {
+                        const text = code.textContent.trim();
+                        navigator.clipboard.writeText(text).then(() => {
+                            const original = copyBtn.textContent;
+                            copyBtn.textContent = '✅ Copied!';
+                            setTimeout(() => copyBtn.textContent = original, 2000);
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
