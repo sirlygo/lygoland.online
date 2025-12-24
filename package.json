@@ -1,0 +1,20 @@
+{
+  "name": "minecraft-server-controller",
+  "version": "2.0.0",
+  "description": "Backend API to control Minecraft server - Fixed Version",
+  "main": "server-controller-fixed.js",
+  "scripts": {
+    "start": "node server-controller-fixed.js",
+    "dev": "nodemon server-controller-fixed.js"
+  },
+  "keywords": ["minecraft", "server", "controller"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
