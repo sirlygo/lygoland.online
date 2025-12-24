@@ -89,6 +89,7 @@
         .content {
             position: relative;
             z-index: 1;
+            min-height: 100vh;
         }
 
         /* Navigation */
@@ -171,6 +172,10 @@
 
         .hero-content {
             max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
         }
 
         .badge {
@@ -185,6 +190,13 @@
             font-size: 0.875rem;
             font-weight: 600;
             margin-bottom: 2rem;
+            justify-content: center;
+        }
+
+        .badge.offline {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
         }
 
         .pulse-dot {
@@ -318,6 +330,130 @@
             gap: 2rem;
             max-width: 900px;
             margin: 0 auto;
+        }
+
+        .status-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 1rem auto 0;
+            max-width: 1000px;
+        }
+
+        .status-card {
+            background: linear-gradient(145deg, rgba(0, 217, 255, 0.05), rgba(124, 58, 237, 0.08));
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            pointer-events: none;
+        }
+
+        .status-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-card p {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .info-item {
+            background: rgba(10, 15, 30, 0.35);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 0.9rem 1rem;
+        }
+
+        .info-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.4rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .pill.offline {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .pill.neutral {
+            background: rgba(124, 58, 237, 0.12);
+            color: var(--accent-2);
+            border-color: rgba(124, 58, 237, 0.3);
+        }
+
+        .status-card-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .ghost-btn {
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--text);
+            padding: 0.65rem 1rem;
+            border-radius: 0.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .ghost-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .status-note {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
         }
 
         .stat {
@@ -925,6 +1061,10 @@
                 grid-template-columns: repeat(2, 1fr);
             }
 
+            .status-panel {
+                grid-template-columns: 1fr;
+            }
+
             .features-grid {
                 grid-template-columns: 1fr;
             }
@@ -978,7 +1118,7 @@
                 <div class="nav-links" id="clientNav">
                     <a href="#players" class="nav-link">Players</a>
                     <a href="#features" class="nav-link">Features</a>
-                    <a href="#" class="nav-link">Discord</a>
+                    <a href="https://discord.gg/lygoland" class="nav-link" target="_blank" rel="noopener noreferrer">Discord</a>
                     <button class="btn-admin" onclick="showLoginModal()">
                         🔐 Admin
                     </button>
@@ -1014,7 +1154,7 @@
                     <div class="ip-container">
                         <div class="ip-label">Server Address</div>
                         <div class="ip-display" id="serverIP">lygoland.online</div>
-                        <button class="btn" onclick="copyIP()">
+                        <button class="btn" onclick="copyIP(event)">
                             <span>📋</span>
                             <span>Copy Address</span>
                         </button>
@@ -1036,6 +1176,75 @@
                         <div class="stat">
                             <div class="stat-value">99.9%</div>
                             <div class="stat-label">Online</div>
+                        </div>
+                    </div>
+
+                    <div class="status-panel">
+                        <div class="status-card">
+                            <div class="status-card-actions">
+                                <div class="pill" id="liveStatusPill">
+                                    <span>●</span>
+                                    <span id="liveStatusLabel">Checking...</span>
+                                </div>
+                                <button class="ghost-btn" onclick="checkStatus(true)">
+                                    🔄 Refresh status
+                                </button>
+                            </div>
+                            <h3>Live Server Snapshot</h3>
+                            <p class="status-note" id="statusNote">
+                                🛰 Pulling live data from mcsrvstat.us
+                            </p>
+                            <div class="meta-grid">
+                                <div class="info-item">
+                                    <div class="info-label">Last Check</div>
+                                    <div class="info-value" id="lastChecked">—</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Latency</div>
+                                    <div class="info-value" id="latencyValue">—</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Version</div>
+                                    <div class="info-value" id="versionValue">—</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Max Players</div>
+                                    <div class="info-value" id="maxPlayers">—</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="status-card">
+                            <div class="status-card-actions">
+                                <div class="pill neutral">
+                                    <span>📡</span>
+                                    <span>Quick Connect</span>
+                                </div>
+                                <button class="ghost-btn" onclick="copyIP(event)">
+                                    📋 Copy & join
+                                </button>
+                            </div>
+                            <h3>Connection Details</h3>
+                            <p class="status-note">
+                                🔒 Secured endpoint: <strong id="quickIP">lygoland.online</strong>
+                            </p>
+                            <div class="meta-grid">
+                                <div class="info-item">
+                                    <div class="info-label">Current Players</div>
+                                    <div class="info-value" id="quickPlayers">0</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Server State</div>
+                                    <div class="info-value" id="quickStatus">Unknown</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Next Sync</div>
+                                    <div class="info-value" id="nextSync">30s</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">MOTD</div>
+                                    <div class="info-value" id="motdValue">—</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1103,7 +1312,7 @@
                 <h2>Ready to Play?</h2>
                 <p>Join thousands of players in the adventure</p>
                 <div class="cta-buttons">
-                    <button class="btn" onclick="copyIP()">
+                    <button class="btn" onclick="copyIP(event)">
                         <span>📋</span>
                         <span>Copy Server IP</span>
                     </button>
@@ -1159,10 +1368,10 @@
 
                 <!-- Tabs -->
                 <div class="tabs">
-                    <button class="tab active" onclick="switchTab('dashboard')">📊 Dashboard</button>
-                    <button class="tab" onclick="switchTab('players')">👥 Players</button>
-                    <button class="tab" onclick="switchTab('console')">💻 Console</button>
-                    <button class="tab" onclick="switchTab('settings')">⚙️ Settings</button>
+                    <button class="tab active" onclick="switchTab('dashboard', this)">📊 Dashboard</button>
+                    <button class="tab" onclick="switchTab('players', this)">👥 Players</button>
+                    <button class="tab" onclick="switchTab('console', this)">💻 Console</button>
+                    <button class="tab" onclick="switchTab('settings', this)">⚙️ Settings</button>
                 </div>
 
                 <!-- Dashboard Tab -->
@@ -1363,8 +1572,16 @@
             version: 'Loading...',
             currentView: 'client',
             currentTab: 'dashboard',
-            isLoggedIn: false
+            isLoggedIn: false,
+            lastChecked: null,
+            latency: null,
+            maxPlayers: 0,
+            motd: ''
         };
+
+        let resourceInterval = null;
+        let nextSyncTimer = null;
+        let nextSyncRemaining = CONFIG.CHECK_INTERVAL / 1000;
 
         // Storage
         function saveData(key, value) {
@@ -1404,6 +1621,7 @@
             document.getElementById('clientNav').classList.remove('hidden');
             document.getElementById('adminNav').classList.add('hidden');
             state.currentView = 'client';
+            stopResourceMonitor();
         }
 
         function showAdminView() {
@@ -1416,11 +1634,12 @@
         }
 
         // Tabs
-        function switchTab(tabName) {
+        function switchTab(tabName, el = null) {
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
             
-            event.target.classList.add('active');
+            const target = el || event?.currentTarget;
+            if (target) target.classList.add('active');
             document.getElementById(tabName + 'Tab').classList.add('active');
             
             state.currentTab = tabName;
@@ -1428,14 +1647,30 @@
         }
 
         // Copy IP
-        function copyIP() {
-            navigator.clipboard.writeText(CONFIG.SERVER_IP).then(() => {
-                const btn = event.target.closest('button');
-                const span = btn.querySelector('span:last-child');
-                const original = span.textContent;
-                span.textContent = 'Copied!';
-                setTimeout(() => span.textContent = original, 2000);
-            });
+        function copyIP(e) {
+            const btn = e?.currentTarget || null;
+            const label = btn?.querySelector('span:last-child');
+            const original = label?.textContent;
+
+            const resetLabel = () => {
+                if (label && original) {
+                    setTimeout(() => label.textContent = original, 2000);
+                }
+            };
+
+            const fallbackCopy = () => {
+                window.prompt('Copy the server IP address:', CONFIG.SERVER_IP);
+                resetLabel();
+            };
+
+            try {
+                navigator.clipboard.writeText(CONFIG.SERVER_IP).then(() => {
+                    if (label) label.textContent = 'Copied!';
+                    resetLabel();
+                }).catch(fallbackCopy);
+            } catch {
+                fallbackCopy();
+            }
         }
 
         // Login Modal
@@ -1475,7 +1710,8 @@
         }
 
         // Server Status
-        async function checkStatus() {
+        async function checkStatus(manual = false) {
+            const startTime = performance.now ? performance.now() : Date.now();
             try {
                 const response = await fetch(`https://api.mcsrvstat.us/3/${CONFIG.SERVER_IP}`);
                 const data = await response.json();
@@ -1484,6 +1720,11 @@
                     state.online = true;
                     state.version = data.version || 'Unknown';
                     const count = data.players?.online || 0;
+                    const motdRaw = data.motd?.clean || data.motd?.raw || [];
+                    state.motd = Array.isArray(motdRaw) ? motdRaw.join(' ') : motdRaw || 'No MOTD available';
+                    state.maxPlayers = data.players?.max || 0;
+                    state.lastChecked = new Date();
+                    state.latency = Math.max(1, Math.round((performance.now ? performance.now() : Date.now()) - startTime));
 
                     if (data.players?.list) {
                         state.players = data.players.list.map(name => ({ name }));
@@ -1495,27 +1736,36 @@
                 } else {
                     state.online = false;
                     state.players = [];
+                    state.version = 'Unknown';
+                    state.motd = 'No data available';
+                    state.maxPlayers = 0;
+                    state.latency = null;
+                    state.lastChecked = new Date();
                     updateUI(0);
                 }
             } catch (error) {
                 console.error('Status check failed:', error);
                 state.online = false;
+                state.players = [];
+                state.version = 'Unknown';
+                state.motd = 'Unable to reach status API';
+                state.maxPlayers = 0;
+                state.latency = null;
+                state.lastChecked = new Date();
                 updateUI(0);
             }
+
+            startNextSyncCountdown();
         }
 
         // Update UI
         function updateUI(count) {
-            // Status
             const statusText = state.online ? 'Server Online' : 'Server Offline';
-            const elements = ['statusBadge', 'adminStatusBadge', 'footerStatus'];
-            elements.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.textContent = statusText;
-            });
+            const statusTargets = ['statusBadge', 'adminStatusBadge', 'footerStatus', 'quickStatus'];
+            statusTargets.forEach(id => updateBadge(id, statusText, state.online));
 
             // Counts
-            const countElements = ['playerCount', 'totalPlayers', 'footerPlayers', 'adminPlayerCount'];
+            const countElements = ['playerCount', 'totalPlayers', 'footerPlayers', 'adminPlayerCount', 'quickPlayers'];
             countElements.forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.textContent = count;
@@ -1523,11 +1773,24 @@
 
             // Version
             const versionEl = document.getElementById('serverVersion');
+            const versionValueEl = document.getElementById('versionValue');
             if (versionEl) versionEl.textContent = state.version;
+            if (versionValueEl) versionValueEl.textContent = state.version;
+
+            const maxPlayersEl = document.getElementById('maxPlayers');
+            if (maxPlayersEl) maxPlayersEl.textContent = state.maxPlayers || '∞';
+
+            const quickIPEl = document.getElementById('quickIP');
+            if (quickIPEl) quickIPEl.textContent = CONFIG.SERVER_IP;
+
+            const footerIPEl = document.getElementById('footerIP');
+            if (footerIPEl) footerIPEl.textContent = CONFIG.SERVER_IP;
 
             // TPS
             const tpsEl = document.getElementById('adminTPS');
             if (tpsEl) tpsEl.textContent = state.online ? (19.5 + Math.random() * 0.5).toFixed(1) : '0';
+
+            updateStatusMeta();
 
             // Players grid
             const grid = document.getElementById('playersGrid');
@@ -1574,6 +1837,85 @@
                         </div>
                     `).join('');
                 }
+            }
+        }
+
+        function updateBadge(id, text, online) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.textContent = text;
+
+            const target = el.classList.contains('badge') ? el : el.closest('.badge');
+            if (target) {
+                target.classList.toggle('offline', !online);
+            }
+        }
+
+        function updateStatusMeta() {
+            const liveStatusPill = document.getElementById('liveStatusPill');
+            const liveStatusLabel = document.getElementById('liveStatusLabel');
+            if (liveStatusPill) liveStatusPill.classList.toggle('offline', !state.online);
+            if (liveStatusLabel) liveStatusLabel.textContent = state.online ? 'Online' : 'Offline';
+
+            const lastCheckedEl = document.getElementById('lastChecked');
+            if (lastCheckedEl) {
+                lastCheckedEl.textContent = state.lastChecked
+                    ? state.lastChecked.toLocaleTimeString()
+                    : '—';
+            }
+
+            const latencyEl = document.getElementById('latencyValue');
+            if (latencyEl) latencyEl.textContent = state.latency !== null ? `${state.latency} ms` : 'n/a';
+
+            const motdEl = document.getElementById('motdValue');
+            if (motdEl) motdEl.textContent = state.motd || 'No MOTD available';
+
+            const noteEl = document.getElementById('statusNote');
+            if (noteEl) {
+                noteEl.textContent = state.online
+                    ? '🛰 Live data synced from mcsrvstat.us'
+                    : '⚠️ Server appears offline — retrying shortly';
+            }
+        }
+
+        function startNextSyncCountdown() {
+            clearInterval(nextSyncTimer);
+            nextSyncRemaining = CONFIG.CHECK_INTERVAL / 1000;
+            updateNextSyncDisplay();
+            nextSyncTimer = setInterval(() => {
+                nextSyncRemaining = Math.max(0, nextSyncRemaining - 1);
+                updateNextSyncDisplay();
+            }, 1000);
+        }
+
+        function updateNextSyncDisplay() {
+            const nextSyncEl = document.getElementById('nextSync');
+            if (nextSyncEl) nextSyncEl.textContent = `${Math.round(nextSyncRemaining)}s`;
+        }
+
+        function startResourceMonitor() {
+            if (resourceInterval) return;
+            resourceInterval = setInterval(() => {
+                const cpu = 30 + Math.random() * 40;
+                const cpuEl = document.getElementById('cpuPercent');
+                const cpuBar = document.getElementById('cpuBar');
+                
+                if (cpuEl) cpuEl.textContent = cpu.toFixed(1) + '%';
+                if (cpuBar) cpuBar.style.width = cpu + '%';
+
+                const mem = 40 + Math.random() * 30;
+                const memEl = document.getElementById('memPercent');
+                const memBar = document.getElementById('memBar');
+                
+                if (memEl) memEl.textContent = `${(mem * 0.08).toFixed(1)} GB / 8 GB`;
+                if (memBar) memBar.style.width = mem + '%';
+            }, 3000);
+        }
+
+        function stopResourceMonitor() {
+            if (resourceInterval) {
+                clearInterval(resourceInterval);
+                resourceInterval = null;
             }
         }
 
@@ -1762,23 +2104,7 @@
         function initAdmin() {
             addLog('Admin panel initialized', 'success');
             addLog('System operational', 'info');
-
-            // Simulate resource usage
-            setInterval(() => {
-                const cpu = 30 + Math.random() * 40;
-                const cpuEl = document.getElementById('cpuPercent');
-                const cpuBar = document.getElementById('cpuBar');
-                
-                if (cpuEl) cpuEl.textContent = cpu.toFixed(1) + '%';
-                if (cpuBar) cpuBar.style.width = cpu + '%';
-
-                const mem = 40 + Math.random() * 30;
-                const memEl = document.getElementById('memPercent');
-                const memBar = document.getElementById('memBar');
-                
-                if (memEl) memEl.textContent = `${(mem * 0.08).toFixed(1)} GB / 8 GB`;
-                if (memBar) memBar.style.width = mem + '%';
-            }, 3000);
+            startResourceMonitor();
         }
 
         // Scroll reveal
